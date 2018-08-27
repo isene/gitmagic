@@ -9,7 +9,9 @@
 gitmagic [-idDpusvh] [long-options]
 
 ### Description
-gitmagic makes initiating a project easy, also from a local template project. It also simplifies updating git projects. It will do more in due time.
+* Initiate projects from your local folders
+* Create new online presentations using Jekyll w/Gitpages
+* Update projects easily
 
 ### Options
 
