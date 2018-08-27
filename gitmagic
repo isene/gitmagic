@@ -1,0 +1,162 @@
+#!/usr/bin/env ruby
+# encoding: utf-8
+
+# Change these settings to fit your setup:
+$user        = "isene"
+$repodir     = "/home/geir/G/GIT-isene"
+$pres_templ  = "/home/geir/G/GIT/gh-presentation"
+$issues      = "true"
+$downloads   = "true"
+$wiki        = "false"
+$priv        = "false"
+
+# Initializing variable
+$dir         = Dir.pwd
+$message     = ""
+$desc        = ""
+
+require 'getoptlong'
+require 'fileutils'
+require 'date'
+
+prgmversion = 0.1
+
+def help
+puts <<HELPTEXT
+NAME
+  "gitmagic" is a swiss army knife of git tools
+
+SYNOPSIS
+  gitmagic [-idDpusvh] [long-options]
+
+DESCRIPTION
+  gitmagic makes initiating a project easy, also from
+  a local template project. It also simplifies updating 
+  git projects. It will do more in due time.
+
+OPTIONS
+    -i, --init  
+        Initialize a new github project.
+        Requires a name for the repo as argument
+				You may supply --desc (-d) for a description of the repo, or else a
+				  description will be added in the form "Project_2018-09-13"
+        You may supply a dir path "--dir" (-D), or else the current dir is used
+        EXAMPLE: gimagic -i "My new repo!" -d "Really cool stuff" -D ~/projects/124
+    -d, --desc
+        Add description to a new repo
+        Used in combination with --init or --slides
+    -D, --dir
+        Specify the directory for a new initiated repo
+        Used in combination with --init or --update
+        If no directory is specified, the program will use the current directory
+    -p, --priv
+        Make the Github repo private
+    -u, --update
+        Update a github project
+        Takes the commit message as argument
+        You may supply a dir path "--dir" (-D), or else the current dir is used
+        EXAMPLE: gimagic -u "Bug fix" -D ~/projects/159
+    -s, --slides
+        Create a presentation project with slides written in simple Markdown text.
+        See Fredrik Eilertsen's neat work that makes it possible to create 
+        presentations using Jekyll (https://github.com/fredeil/gh-presentation)
+        This option will use '$pres_templ' to find the cloned "gh-presentation"
+        It will create the presentation under your '$repodir'
+        You must supply a name for your repo/presentation as the argument
+        EXAMPLE: gimagic -s "Presentation23"
+    -v, --version
+        Show the version of this program
+    -h, --help
+        Show this help text
+
+COPYRIGHT:
+    Copyright 2018, Geir Isene (https://isene.org)
+    This program is released under the WTFPL license
+    (Full license text here: http://www.wtfpl.net/about/)
+HELPTEXT
+end
+
+opts = GetoptLong.new(
+    [ "--init",     "-i", GetoptLong::REQUIRED_ARGUMENT ],
+    [ "--desc",     "-d", GetoptLong::REQUIRED_ARGUMENT ],
+    [ "--dir",      "-D", GetoptLong::REQUIRED_ARGUMENT ],
+    [ "--priv",     "-p", GetoptLong::NO_ARGUMENT ],
+    [ "--update",   "-u", GetoptLong::REQUIRED_ARGUMENT ],
+    [ "--slides",   "-s", GetoptLong::REQUIRED_ARGUMENT ],
+    [ "--version",  "-v", GetoptLong::NO_ARGUMENT ],
+    [ "--help",     "-h", GetoptLong::NO_ARGUMENT ]
+)
+
+def gitinit
+  `git init #{$dir}`
+  # Fix the git confi file
+  gitconftxt  = "[remote \"origin\"]\n"
+  gitconftxt += "\turl = git@github.com:#{$user}/#{$repo}.git\n"
+  gitconftxt += "\tfetch = +refs/heads/*:refs/remotes/origin/*\n"
+  gitconftxt += "[branch \"master\"]\n"
+  gitconftxt += "\tremote = origin\n"
+  gitconftxt += "\tmerge = refs/heads/master"
+  File.write("#{$dir}/.git/config", gitconftxt, mode: 'a')
+  # Upload the repo to Github
+  jsontxt = "{\"name\": \"#{$repo}\", \"description\": \"#{$desc}\", \"private\": #{$priv}, \"has_issues\": #{$issues}, \"has_downloads\": #{$downloads}, \"has_wiki\": #{$wiki}}"
+  cmd = %Q[curl -u #{$user} https://api.github.com/user/repos -d '#{jsontxt}']
+  out = %x[ #{cmd} ]
+end
+
+def gitupdate
+  %x[ cd #{$dir} && git add . && git commit -m '#{$message}' && git push ]
+end
+
+def gitpres
+  $dir = $repodir + "/" + $repo
+  Dir.mkdir($dir)
+  presdir = $pres_templ + "/."
+  FileUtils.cp_r(presdir, $dir)
+  gitdir = $dir + "/.git"
+  FileUtils.remove_dir(gitdir)
+end
+
+# Catch error for required argument for option(s)
+begin
+  opts.each do |opt, arg|
+    case opt
+      when "--help"
+        help
+        exit
+      when "--version"
+        puts "gitmagic version: #{prgmversion.to_s}"
+        exit
+      when "--desc"
+        $desc = arg
+      when "--dir"
+        $dir = File.expand_path(arg)
+      when "--priv"
+        $priv = "true"
+      when "--init"
+        $repo = arg
+        $desc = "Project_#{Date.today.to_s}" if $desc == ""
+        gitinit
+        $message = "Initialized"
+				gitupdate
+        puts "Git repo initiated: #{$repo}"
+        exit
+      when "--update"
+        $message = arg
+        gitupdate
+        puts "Git repo updated"
+        exit
+      when "--slides"
+        $repo = arg
+        $desc = "Presentation" if $desc == ""
+        gitpres
+        File.delete("#{$dir}/README.md") if File.exist?("#{$dir}/README.md")
+        gitinit
+        $message = "Initialized"
+        gitupdate
+        puts "Presentation created: #{$repo}"
+        exit
+    end
+  end
+rescue
+end
+
