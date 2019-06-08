@@ -38,8 +38,8 @@ OPTIONS
     -i, --init  
         Initialize a new github project.
         Requires a name for the repo as argument
-				You may supply --desc (-d) for a description of the repo, or else a
-				  description will be added in the form "Project_2018-09-13"
+        You may supply --desc (-d) for a description of the repo, or else a
+          description will be added in the form "Project_2018-09-13"
         You may supply a dir path "--dir" (-D), or else the current dir is used
         EXAMPLE: gimagic -i "My new repo!" -d "Really cool stuff" -D ~/projects/124
     -d, --desc
@@ -137,7 +137,7 @@ begin
         $desc = "Project_#{Date.today.to_s}" if $desc == ""
         gitinit
         $message = "Initialized"
-				gitupdate
+        gitupdate
         puts "Git repo initiated: #{$repo}"
         exit
       when "--update"
@@ -158,6 +158,6 @@ begin
     end
   end
 rescue
-	puts "ERROR"
+  puts "ERROR"
 end
 
