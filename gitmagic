@@ -14,6 +14,7 @@ $priv        = "false"
 $dir         = Dir.pwd
 $message     = ""
 $desc        = ""
+$repo        = ""
 
 require 'getoptlong'
 require 'fileutils'
@@ -35,6 +36,8 @@ DESCRIPTION
   git projects. It will do more in due time.
 
 OPTIONS
+    -c, --clone
+		    Simply clones a repo, just like 'git clone'.
     -i, --init  
         Initialize a new github project.
         Requires a name for the repo as argument
@@ -77,6 +80,7 @@ HELPTEXT
 end
 
 opts = GetoptLong.new(
+    [ "--clone",    "-c", GetoptLong::REQUIRED_ARGUMENT ],
     [ "--init",     "-i", GetoptLong::REQUIRED_ARGUMENT ],
     [ "--desc",     "-d", GetoptLong::REQUIRED_ARGUMENT ],
     [ "--dir",      "-D", GetoptLong::REQUIRED_ARGUMENT ],
@@ -126,6 +130,10 @@ begin
       when "--version"
         puts "gitmagic version: #{prgmversion.to_s}"
         exit
+      when "--clone"
+        $repo = arg
+        %x[ clone #{$repo} ]
+				exit
       when "--desc"
         $desc = arg
       when "--dir"

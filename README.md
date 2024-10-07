@@ -15,6 +15,9 @@ gitmagic [-idDpusvh] [long-options]
 
 ### Options
 
+#### -c, --clone  
+Simply clones a repo, just like 'git clone'..
+
 #### -i, --init  
 Initialize a new github project.
 Requires a name for the repo as argument
