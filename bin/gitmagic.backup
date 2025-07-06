@@ -1,58 +1,14 @@
 #!/usr/bin/env ruby
 # encoding: utf-8
 
-require 'yaml'
-
-# Configuration management with backward compatibility
-class GitMagicConfig
-  def self.load
-    # Default values (your current settings)
-    defaults = {
-      'user'        => "isene",
-      'repodir'     => "/home/geir/G/GIT-isene",
-      'pres_templ'  => "/home/geir/G/GIT/gh-presentation",
-      'issues'      => "true",
-      'downloads'   => "true",
-      'wiki'        => "false",
-      'priv'        => "false"
-    }
-    
-    config = defaults.dup
-    
-    # Try to load from config files
-    config_paths = [
-      File.join(Dir.home, '.gitmagic.yml'),
-      File.join(Dir.home, '.config', 'gitmagic', 'config.yml'),
-      '.gitmagic.yml'
-    ]
-    
-    config_paths.each do |path|
-      if File.exist?(path)
-        begin
-          loaded = YAML.load_file(path)
-          config.merge!(loaded) if loaded.is_a?(Hash)
-          break
-        rescue => e
-          # Continue with defaults if config file is invalid
-        end
-      end
-    end
-    
-    config
-  end
-end
-
-# Load configuration
-config = GitMagicConfig.load
-
-# Set global variables for backward compatibility
-$user        = config['user']
-$repodir     = config['repodir']
-$pres_templ  = config['pres_templ']
-$issues      = config['issues']
-$downloads   = config['downloads']
-$wiki        = config['wiki']
-$priv        = config['priv']
+# Change these settings to fit your setup:
+$user        = "isene"
+$repodir     = "/home/geir/G/GIT-isene"
+$pres_templ  = "/home/geir/G/GIT/gh-presentation"
+$issues      = "true"
+$downloads   = "true"
+$wiki        = "false"
+$priv        = "false"
 
 # Initializing variable
 $dir         = Dir.pwd
