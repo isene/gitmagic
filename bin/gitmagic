@@ -14,7 +14,8 @@ class GitMagicConfig
       'issues'      => "true",
       'downloads'   => "true",
       'wiki'        => "false",
-      'priv'        => "false"
+      'priv'        => "false",
+      'github_token' => ENV['GITHUB_TOKEN'] || nil
     }
     
     config = defaults.dup
@@ -53,6 +54,7 @@ $issues      = config['issues']
 $downloads   = config['downloads']
 $wiki        = config['wiki']
 $priv        = config['priv']
+$github_token = config['github_token']
 
 # Initializing variable
 $dir         = Dir.pwd
@@ -147,7 +149,12 @@ def gitinit
   File.write("#{$dir}/.git/config", gitconftxt, mode: 'a')
   # Upload the repo to Github
   jsontxt = "{\"name\": \"#{$repo}\", \"description\": \"#{$desc}\", \"private\": #{$priv}, \"has_issues\": #{$issues}, \"has_downloads\": #{$downloads}, \"has_wiki\": #{$wiki}}"
-  cmd = %Q[curl -u #{$user} https://api.github.com/user/repos -d '#{jsontxt}']
+  if $github_token
+    cmd = %Q[curl -H "Authorization: token #{$github_token}" https://api.github.com/user/repos -d '#{jsontxt}']
+  else
+    # Fallback to old auth method for backward compatibility
+    cmd = %Q[curl -u #{$user} https://api.github.com/user/repos -d '#{jsontxt}']
+  end
   out = %x[ #{cmd} ]
 end
 
@@ -176,7 +183,7 @@ begin
         exit
       when "--clone"
         $repo = arg
-        %x[ clone #{$repo} ]
+        %x[ git clone #{$repo} ]
 				exit
       when "--desc"
         $desc = arg

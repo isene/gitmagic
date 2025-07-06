@@ -1,0 +1,25 @@
+# GitMagic Configuration File
+# Copy this to one of these locations:
+#   ~/.gitmagic.yml
+#   ~/.config/gitmagic/config.yml
+#   ./.gitmagic.yml (in current directory)
+
+# GitHub username
+user: "isene"
+
+# GitHub Personal Access Token (optional)
+# If not provided here, can be set via GITHUB_TOKEN environment variable
+# Create a token at: https://github.com/settings/tokens
+# github_token: "your_personal_access_token_here"
+
+# Default directory for repositories
+repodir: "/home/geir/G/GIT-isene"
+
+# Template directory for presentations
+pres_templ: "/home/geir/G/GIT/gh-presentation"
+
+# Default repository settings
+issues: "true"
+downloads: "true"
+wiki: "false"
+priv: "false"
