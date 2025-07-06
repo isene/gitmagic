@@ -1,4 +1,4 @@
-# Gitmagic
+# Gitmagic v1.5
 
 ## Usage
 
@@ -12,6 +12,25 @@ gitmagic [-idDpusvh] [long-options]
 * Initiate projects from your local folders
 * Create new online presentations using Jekyll w/Gitpages
 * Update projects easily
+* Flexible configuration system with support for config files
+* GitHub Personal Access Token support for improved security
+
+### What's New in v1.5
+* Added configuration file support (`.gitmagic.yml`)
+* Added GitHub Personal Access Token authentication
+* Fixed git clone command bug
+* Improved code organization while maintaining backward compatibility
+
+### Configuration
+
+Gitmagic now supports configuration files. Create a `.gitmagic.yml` file in one of these locations:
+* `~/.gitmagic.yml` (recommended)
+* `~/.config/gitmagic/config.yml`
+* `./.gitmagic.yml` (current directory)
+
+See `.gitmagic.yml.example` for a sample configuration.
+
+You can also set a GitHub token via the `GITHUB_TOKEN` environment variable.
 
 ### Options
 
@@ -58,5 +77,11 @@ Show the version of this program
 #### -h, --help
 Show this help text
 
+### Installation
+
+```bash
+gem install gitmagical
+```
+
 ### License
-Copyright 2018, Geir Isene (https://isene.org) This program is released under the WTFPL license (Full license text here: http://www.wtfpl.net/about/)
+Copyright 2018-2025, Geir Isene (https://isene.org) This program is released under the WTFPL license (Full license text here: http://www.wtfpl.net/about/)
