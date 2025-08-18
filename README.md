@@ -1,5 +1,10 @@
 # Gitmagic v1.5
 
+[![Gem Version](https://badge.fury.io/rb/gitmagical.svg)](https://badge.fury.io/rb/gitmagical)
+[![Ruby](https://img.shields.io/badge/Ruby-CC342D?style=flat&logo=ruby&logoColor=white)](https://www.ruby-lang.org/)
+[![GitHub stars](https://img.shields.io/github/stars/isene/gitmagic.svg)](https://github.com/isene/gitmagic/stargazers)
+[![Stay Amazing](https://img.shields.io/badge/Stay-Amazing-blue.svg)](https://isene.org)
+
 ## Usage
 
 ### Name
