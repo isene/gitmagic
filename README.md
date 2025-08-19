@@ -5,6 +5,8 @@
 [![GitHub stars](https://img.shields.io/github/stars/isene/gitmagic.svg)](https://github.com/isene/gitmagic/stargazers)
 [![Stay Amazing](https://img.shields.io/badge/Stay-Amazing-blue.svg)](https://isene.org)
 
+<img src="gitmagic_logo.svg" align="left" width="150" height="150"> Git Made Magical - A simple and flexible gem for automating common git tasks.
+
 ## Usage
 
 ### Name
